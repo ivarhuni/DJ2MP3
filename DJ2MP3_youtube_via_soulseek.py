@@ -93,9 +93,9 @@ def main():
         info = ydl.extract_info(f"https://www.youtube.com/watch?v={vid}", download=False)
         video_title = info.get('title', f'video_{vid}')
     folder_name = sanitize_filename(video_title)
-    output_dir = os.path.join(args.directory, folder_name)
-    os.makedirs(output_dir, exist_ok=True)
-    tracklist_path = os.path.join(output_dir, 'tracklist.txt')
+    mix_root = os.path.join(args.directory, folder_name)
+    os.makedirs(mix_root, exist_ok=True)
+    tracklist_path = os.path.join(mix_root, 'tracklist.txt')
     with open(tracklist_path, 'w', encoding='utf-8') as f:
         for track in tracks:
             f.write(f'"{track}"\n')
@@ -110,7 +110,7 @@ def main():
         '--pref-format', args.pref_format,
         '--min-bitrate', str(args.min_bitrate),
         '--input-type', 'list',
-        '-p', output_dir
+        '-p', mix_root
     ]
     print(f"Running: {' '.join(cmd)}")
 

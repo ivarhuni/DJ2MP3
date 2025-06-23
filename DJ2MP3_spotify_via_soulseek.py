@@ -58,13 +58,12 @@ def main():
     # Use playlist name for folder
     playlist = sp.playlist(args.playlist_url.split("playlist/")[-1].split("?")[0])
     folder_name = sanitize_filename(playlist['name'])
-    output_dir = os.path.join(args.directory, folder_name)
-    os.makedirs(output_dir, exist_ok=True)
-    tracklist_path = os.path.join(output_dir, 'tracklist.txt')
+    playlist_root = os.path.join(args.directory, folder_name)
+    os.makedirs(playlist_root, exist_ok=True)
+    tracklist_path = os.path.join(playlist_root, 'tracklist.txt')
     with open(tracklist_path, 'w', encoding='utf-8') as f:
         for track in tracks:
-            f.write(f'"{track}"
-')
+            f.write(f'"{track}"\n')
     print(f"Tracklist written to {tracklist_path}")
 
     # Build sldl.exe command
@@ -76,7 +75,7 @@ def main():
         '--pref-format', args.pref_format,
         '--min-bitrate', str(args.min_bitrate),
         '--input-type', 'list',
-        '-p', output_dir
+        '-p', playlist_root
     ]
     print(f"Running: {' '.join(cmd)}")
 
