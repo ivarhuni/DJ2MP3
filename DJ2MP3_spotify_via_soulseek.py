@@ -7,7 +7,8 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy
 
 def sanitize_filename(name):
-    return re.sub(r'[\\/:*?"<>|]', '_', name)
+    # Replace all problematic characters (including slashes, backslashes, and whitespace at ends) with underscores
+    return re.sub(r'[\\/:*?"<>|\s]+', '_', name).strip('_')
 
 def fetch_spotify_tracks_with_dash_fallback(playlist_url, sp):
     playlist_id = playlist_url.split("playlist/")[-1].split("?")[0]
