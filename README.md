@@ -52,4 +52,10 @@ Ensure ffmpeg is installed and in your system PATH:
 
 ## Example Usage
 
+To download MP3s from a YouTube comment containing a tracklist, run:
+
+```sh
+python setlist_to_mp3.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4LZra3oRGeF0St4AaABAg" -d downloads
 ```
+
+This will create a `downloads` directory in your project root and save the MP3s there.
