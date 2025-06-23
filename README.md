@@ -44,4 +44,28 @@ Ensure ffmpeg is installed and in your system PATH:
 - `-d, --directory`       Output directory (required)
 - `--min-duration`        Minimum video duration in seconds (default: 150)
 - `--max-duration`        Maximum video duration in seconds (default: 630)
-- `--workers`             Number of concurrent downloads (default: 4) 
+- `--workers`             Number of concurrent downloads (default: 4)
+
+## Example Usage
+
+To download MP3s from a YouTube comment containing a tracklist, run:
+
+```sh
+python setlist_to_mp3.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4LZra3oRGeF0St4AaABAg" -d downloads
+```
+
+This will create a `downloads` directory in your project root and save the MP3s there.
+
+### URL Explanation
+
+- **Main URL:**
+  - `https://www.youtube.com/watch?v=E-6LmxvUiMk`
+  - This is the URL for the YouTube video itself.
+
+- **Comment URL (Required by the Program):**
+  - `https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4LZra3oRGeF0St4AaABAg`
+  - This URL points to a specific comment on the video, identified by the `lc` parameter.
+    - `v=E-6LmxvUiMk` is the video ID.
+    - `lc=UgxwA4LZra3oRGeF0St4AaABAg` is the comment ID.
+
+**The program requires the comment URL** because it extracts the tracklist from a specific comment, not from the video description or other comments. The `lc` parameter is essential for identifying and fetching the correct comment. 
