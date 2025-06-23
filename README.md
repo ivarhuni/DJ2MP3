@@ -165,3 +165,16 @@ python DJ2MP3_youtube.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4L
 - If you get an authentication error, double-check your `spotify_credentials.txt`.
 - If no tracks are found, make sure the playlist is public and the URL is correct.
 - For Soulseek download issues, see the `sldl` documentation and ensure your credentials are correct.
+
+### Soulseek Credentials
+
+You must supply your Soulseek username and password in a file named `soulseek_credentials.txt` in the project directory. This file should contain:
+
+```
+SOULSEEK_USER=your_soulseek_username
+SOULSEEK_PASS=your_soulseek_password
+```
+
+This file is automatically gitignored and will not be committed to your repository.
+
+Both Soulseek scripts (`DJ2MP3_spotify_via_soulseek.py` and `DJ2MP3_youtube_via_soulseek.py`) will read your credentials from this file.

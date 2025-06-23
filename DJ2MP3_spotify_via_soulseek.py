@@ -41,6 +41,15 @@ def read_spotify_credentials(path='spotify_credentials.txt'):
                 creds[k.strip()] = v.strip()
     return creds.get('CLIENT_ID'), creds.get('CLIENT_SECRET')
 
+def read_soulseek_credentials(path='soulseek_credentials.txt'):
+    creds = {}
+    with open(path, 'r', encoding='utf-8') as f:
+        for line in f:
+            if '=' in line:
+                k, v = line.strip().split('=', 1)
+                creds[k.strip()] = v.strip()
+    return creds.get('SOULSEEK_USER'), creds.get('SOULSEEK_PASS')
+
 def write_tracklist_with_dash_fallback(tracks, path):
     """
     Write tracklist to file. If a track contains '-' and is not found, also try without the dash.
@@ -93,6 +102,11 @@ def main():
     if not client_id or not client_secret:
         sys.exit("Spotify credentials not found in spotify_credentials.txt")
 
+    # Read Soulseek credentials
+    soulseek_user, soulseek_pass = read_soulseek_credentials()
+    if not soulseek_user or not soulseek_pass:
+        sys.exit("Soulseek credentials not found in soulseek_credentials.txt")
+
     # Spotify API setup
     sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id, client_secret=client_secret))
 
@@ -118,8 +132,8 @@ def main():
     sldl_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sldl.exe')
     cmd = [
         sldl_path, tracklist_path,
-        '--user', 'kaztro',
-        '--pass', 'dvergur',
+        '--user', soulseek_user,
+        '--pass', soulseek_pass,
         '--pref-format', args.pref_format,
         '--min-bitrate', str(args.min_bitrate),
         '--input-type', 'list',

@@ -51,6 +51,15 @@ def sanitize_filename(name):
     # Replace all problematic characters (including slashes, backslashes, and whitespace at ends) with underscores
     return re.sub(r'[\\/:*?"<>|\s]+', '_', name).strip('_')
 
+def read_soulseek_credentials(path='soulseek_credentials.txt'):
+    creds = {}
+    with open(path, 'r', encoding='utf-8') as f:
+        for line in f:
+            if '=' in line:
+                k, v = line.strip().split('=', 1)
+                creds[k.strip()] = v.strip()
+    return creds.get('SOULSEEK_USER'), creds.get('SOULSEEK_PASS')
+
 # Note: Login is now handled by slsk-batchdl (sldl.exe) itself. On first run, it will prompt for Soulseek credentials and store them securely for future use.
 
 def flatten_directory(root_dir):
@@ -123,12 +132,17 @@ def main():
             f.write(f'"{track}"\n')
     print(f"Tracklist written to {tracklist_path}")
 
+    # Read Soulseek credentials
+    soulseek_user, soulseek_pass = read_soulseek_credentials()
+    if not soulseek_user or not soulseek_pass:
+        sys.exit("Soulseek credentials not found in soulseek_credentials.txt")
+
     # Build sldl.exe command (only use supported arguments)
     sldl_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sldl.exe')
     cmd = [
         sldl_path, tracklist_path,
-        '--user', 'kaztro',
-        '--pass', 'dvergur',
+        '--user', soulseek_user,
+        '--pass', soulseek_pass,
         '--pref-format', args.pref_format,
         '--min-bitrate', str(args.min_bitrate),
         '--input-type', 'list',
