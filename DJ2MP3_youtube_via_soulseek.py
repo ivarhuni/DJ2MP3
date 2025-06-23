@@ -7,6 +7,7 @@ from urllib.parse import urlparse, parse_qs
 import subprocess
 from youtube_comment_downloader import YoutubeCommentDownloader, SORT_BY_POPULAR
 import yt_dlp
+import shutil
 
 # --- Tracklist Sanitization ---
 def sanitize_tracklist(lines):
@@ -51,6 +52,27 @@ def sanitize_filename(name):
     return re.sub(r'[\\/:*?"<>|\s]+', '_', name).strip('_')
 
 # Note: Login is now handled by slsk-batchdl (sldl.exe) itself. On first run, it will prompt for Soulseek credentials and store them securely for future use.
+
+def flatten_directory(root_dir):
+    """Move all music files from subfolders up to root_dir and remove empty subfolders."""
+    music_exts = {'.mp3', '.flac', '.wav', '.aac', '.ogg', '.m4a', '.wma', '.alac', '.aiff', '.ape', '.opus', '.wv', '.tta', '.ac3', '.dts', '.amr', '.3gp', '.mid', '.midi', '.mod', '.xm', '.it', '.s3m', '.mp2', '.mp1', '.au', '.ra', '.ram', '.m4b', '.m4p', '.mpga', '.spx', '.oga', '.caf', '.dsf', '.dff', '.tak', '.shn', '.aif', '.aifc', '.snd', '.kar'}
+    for dirpath, dirnames, filenames in os.walk(root_dir, topdown=False):
+        for filename in filenames:
+            ext = os.path.splitext(filename)[1].lower()
+            if ext in music_exts:
+                src = os.path.join(dirpath, filename)
+                dst = os.path.join(root_dir, filename)
+                if src != dst:
+                    # Avoid overwriting files with the same name
+                    base, ext = os.path.splitext(filename)
+                    counter = 1
+                    while os.path.exists(dst):
+                        dst = os.path.join(root_dir, f"{base}_{counter}{ext}")
+                        counter += 1
+                    shutil.move(src, dst)
+        # Remove empty subfolders
+        if dirpath != root_dir and not os.listdir(dirpath):
+            os.rmdir(dirpath)
 
 def main():
     parser = argparse.ArgumentParser(description="Download tracks from Soulseek using slsk-batchdl based on a YouTube comment tracklist.")
@@ -135,6 +157,10 @@ def main():
             status_dict[track] = {'status': 'Waiting', 'details': ''}
     proc.wait()
     print("--- slsk-batchdl finished ---\n")
+
+    # Post-process: flatten directory
+    flatten_directory(mix_root)
+    print(f"Flattened directory: {mix_root}")
 
 if __name__ == '__main__':
     main()

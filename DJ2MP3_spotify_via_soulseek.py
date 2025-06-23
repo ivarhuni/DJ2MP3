@@ -5,6 +5,7 @@ import subprocess
 import re
 from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy
+import shutil
 
 def sanitize_filename(name):
     # Replace all problematic characters (including slashes, backslashes, and whitespace at ends) with underscores
@@ -55,6 +56,27 @@ def write_tracklist_with_dash_fallback(tracks, path):
                 if fallback and fallback not in written:
                     f.write(f'"{fallback}"\n')
                     written.add(fallback)
+
+def flatten_directory(root_dir):
+    """Move all music files from subfolders up to root_dir and remove empty subfolders."""
+    music_exts = {'.mp3', '.flac', '.wav', '.aac', '.ogg', '.m4a', '.wma', '.alac', '.aiff', '.ape', '.opus', '.wv', '.tta', '.ac3', '.dts', '.amr', '.3gp', '.mid', '.midi', '.mod', '.xm', '.it', '.s3m', '.mp2', '.mp1', '.au', '.ra', '.ram', '.m4b', '.m4p', '.mpga', '.spx', '.oga', '.caf', '.dsf', '.dff', '.tak', '.shn', '.aif', '.aifc', '.snd', '.kar'}
+    for dirpath, dirnames, filenames in os.walk(root_dir, topdown=False):
+        for filename in filenames:
+            ext = os.path.splitext(filename)[1].lower()
+            if ext in music_exts:
+                src = os.path.join(dirpath, filename)
+                dst = os.path.join(root_dir, filename)
+                if src != dst:
+                    # Avoid overwriting files with the same name
+                    base, ext = os.path.splitext(filename)
+                    counter = 1
+                    while os.path.exists(dst):
+                        dst = os.path.join(root_dir, f"{base}_{counter}{ext}")
+                        counter += 1
+                    shutil.move(src, dst)
+        # Remove empty subfolders
+        if dirpath != root_dir and not os.listdir(dirpath):
+            os.rmdir(dirpath)
 
 def main():
     parser = argparse.ArgumentParser(description="Download tracks from a Spotify playlist using Soulseek via sldl.exe.")
@@ -112,6 +134,10 @@ def main():
         print(line, end="")
     proc.wait()
     print("--- slsk-batchdl finished ---\n")
+
+    # Post-process: flatten directory
+    flatten_directory(playlist_root)
+    print(f"Flattened directory: {playlist_root}")
 
 if __name__ == '__main__':
     main() 
