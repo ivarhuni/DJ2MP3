@@ -47,8 +47,8 @@ def sanitize_tracklist(lines):
     return cleaned
 
 def sanitize_filename(name):
-    # Remove or replace characters not allowed in Windows folder names
-    return re.sub(r'[\\/:*?"<>|]', '_', name)
+    # Replace all problematic characters (including slashes, backslashes, and whitespace at ends) with underscores
+    return re.sub(r'[\\/:*?"<>|\s]+', '_', name).strip('_')
 
 # Note: Login is now handled by slsk-batchdl (sldl.exe) itself. On first run, it will prompt for Soulseek credentials and store them securely for future use.
 
