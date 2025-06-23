@@ -1,133 +1,166 @@
-# Soulseek Batch Downloader Script (`DJ2MP3_soulseek.py`)
+# DJ2MP3: Automated Tracklist Downloaders (Soulseek & YouTube)
 
-This script automates downloading tracks from a YouTube comment tracklist using Soulseek via the `slsk-batchdl` tool ([sldl](https://github.com/fiso64/slsk-batchdl)).
+## Run Examples
 
-### Requirements
-
-- Python packages: `youtube-comment-downloader`, `yt-dlp`
-- Soulseek batch downloader: [`sldl`](https://github.com/fiso64/slsk-batchdl)
-- **.NET Runtime:** `sldl` requires the .NET 6.0 or later Desktop Runtime (Windows/macOS)
-
-#### Install Python dependencies (all platforms)
+### 1. Download from a Spotify Playlist via Soulseek
 ```sh
-pip install youtube-comment-downloader yt-dlp
+python DJ2MP3_spotify_via_soulseek.py "https://open.spotify.com/playlist/4bGw0ncQRTMX891DizZDkr" -d soulseek_downloads
 ```
 
-### Platform-specific Installation
-
-#### **Windows**
-1. **Install .NET Desktop Runtime:**
-    - Go to the [.NET 6.0 Desktop Runtime download page](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
-    - Download and install the "Desktop Runtime" for your system (x64/x86).
-    - After installation, you should be able to run `dotnet --version` in a new terminal.
-2. **Download `sldl.exe`:**
-    - Go to the [slsk-batchdl releases page](https://github.com/fiso64/slsk-batchdl/releases).
-    - Download the latest `sldl.exe` and place it in your project directory (same folder as the Python script).
-
-#### **macOS**
-1. **Install .NET Runtime:**
-    - The recommended way is via Homebrew:
-      ```sh
-      brew install --cask dotnet-sdk
-      ```
-    - Or download the installer from the [.NET 6.0 Desktop Runtime download page](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
-    - After installation, you should be able to run `dotnet --version` in a new terminal.
-2. **Download and install `sldl`:**
-    - Go to the [slsk-batchdl releases page](https://github.com/fiso64/slsk-batchdl/releases).
-    - Download the latest release for macOS. If a native `sldl` binary is available (e.g. `sldl-macos-x64` or `sldl-macos-arm64`), download it and make it executable:
-      ```sh
-      chmod +x sldl-macos-*
-      mv sldl-macos-* sldl
-      ```
-    - If only a `.zip` or `.tar.gz` is provided, extract it and move the `sldl` binary to your project directory.
-    - If there is no native macOS binary, download the `sldl.dll` file and run it using the .NET runtime:
-      ```sh
-      dotnet sldl.dll <args>
-      ```
-    - Place the `sldl` binary (or `sldl.dll`) in your project directory (same folder as the Python script).
-    - You can test the installation by running:
-      ```sh
-      ./sldl --help
-      # or, if using the DLL:
-      dotnet sldl.dll --help
-      ```
-
-### Usage
-
+### 2. Download from a YouTube Tracklist Comment via Soulseek
 ```sh
-python DJ2MP3_soulseek.py "<YouTube comment URL>" -d <output_directory>
+python DJ2MP3_youtube_via_soulseek.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4LZra3oRGeF0St4AaABAg" -d soulseek_downloads
 ```
 
-- The script will create a subfolder named after the YouTube video title inside your chosen output directory.
-- On first run, you will be prompted for your Soulseek username and password (these are stored securely by `sldl`).
-- All tracks will be downloaded into the video-named folder.
-
-#### Example
+### 3. Download MP3s from a YouTube Tracklist Comment (YouTube only)
 ```sh
-python DJ2MP3_soulseek.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4LZra3oRGeF0St4AaABAg" -d soulseek_downloads
+python DJ2MP3_youtube.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4LZra3oRGeF0St4AaABAg" -d downloads
 ```
 
 ---
 
-# Download MP3s from a YouTube Tracklist Comment
+## Options Table
 
-Download MP3s from a tracklist in a YouTube comment, with advanced filtering, max-duration exclusion, and concurrency.
+| Script                        | Output Dir Option | Format Option         | Bitrate Option | Min/Max Size Option | Duration Option | Workers Option | Notes |
+|-------------------------------|-------------------|----------------------|---------------|---------------------|-----------------|---------------|-------|
+| DJ2MP3_spotify_via_soulseek   | `-d, --directory` | `--pref-format`      | `--min-bitrate`| `--min-size`, `--max-size` | -               | -             | Needs Spotify credentials |
+| DJ2MP3_youtube_via_soulseek   | `-d, --directory` | `--pref-format`      | `--min-bitrate`| `--min-size`, `--max-size` | -               | -             | -     |
+| DJ2MP3_youtube                | `-d, --directory` | -                    | -             | -                   | `--min-duration`, `--max-duration` | `--workers`    | Needs ffmpeg |
 
-## Project Purpose
+---
 
-This project automates the process of extracting and downloading individual tracks from DJ set videos as MP3 files. Most popular DJ sets on YouTube have a comment containing the full tracklist—simply provide the URL of that comment, and the script will attempt to locate and download each track as an MP3. While not flawless, the script achieves a high success rate and saves DJs and music enthusiasts significant manual effort.
+## Installation Instructions
 
-## Usage
+### macOS
 
-**macOS/Linux:**
-```sh
-python3 script.py "<YouTube comment URL>" -d <output_directory> [options]
-```
+- **Install .NET Runtime:**
+  ```sh
+  brew install --cask dotnet-sdk
+  ```
+  Or download from the [.NET 6.0 Desktop Runtime download page](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
 
-**Windows PowerShell:**
-```sh
-python script.py "<YouTube comment URL>" -d <output_directory> [options]
-```
+- **Install Python dependencies:**
+  ```sh
+  pip install spotipy youtube-comment-downloader yt-dlp mutagen tqdm
+  ```
 
-## Dependencies
+- **Install ffmpeg:**
+  ```sh
+  brew install ffmpeg
+  ```
+  Or see the [official ffmpeg download page](https://ffmpeg.org/download.html#build-mac) for other options.
+  - After installation, verify with:
+    ```sh
+    ffmpeg -version
+    ```
+  - If you get a "command not found" error, ensure `/usr/local/bin` or `/opt/homebrew/bin` is in your PATH.
 
-- `youtube-comment-downloader`
-- `yt-dlp`
-- `mutagen`
-- `tqdm`
+- **Download `sldl`:**
+  - Go to the [slsk-batchdl releases page](https://github.com/fiso64/slsk-batchdl/releases).
+  - Download the latest release for macOS and make it executable:
+    ```sh
+    chmod +x sldl-macos-*
+    mv sldl-macos-* sldl
+    ```
 
-Install with:
-```sh
-pip install youtube-comment-downloader yt-dlp mutagen tqdm
-```
+### Windows
 
-## ffmpeg (required)
+- **Install .NET Desktop Runtime:**
+  - Download and install from the [.NET 6.0 Desktop Runtime download page](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
+  - After installation, run `dotnet --version` in a new terminal to verify.
 
-Ensure ffmpeg is installed and in your system PATH:
+- **Install Python dependencies:**
+  ```sh
+  pip install spotipy youtube-comment-downloader yt-dlp mutagen tqdm
+  ```
 
-- **macOS:**  
-  `brew install ffmpeg`
-- **Windows:**
-    1. Download the static build from [ffmpeg.org](https://ffmpeg.org/download.html)
-    2. Unzip to a folder, e.g. `C:\ffmpeg`
-    3. In Windows Search, type "Environment Variables" → Edit system environment variables → Environment Variables.
-    4. Under "System variables", select `Path`, click Edit → New, then add `C:\ffmpeg\bin` (or your chosen folder).
-    5. Click OK to save; open a new PowerShell/Command Prompt to verify with `ffmpeg -version`.
+- **Install ffmpeg:**
+  1. Download the static build from the [official ffmpeg website](https://ffmpeg.org/download.html#build-windows).
+  2. Unzip the archive to a folder, e.g. `C:\ffmpeg`.
+  3. Add `C:\ffmpeg\bin` to your system PATH:
+     - Open Windows Search and type "Environment Variables".
+     - Click "Edit the system environment variables".
+     - In the System Properties window, click "Environment Variables...".
+     - Under "System variables", select `Path` and click "Edit".
+     - Click "New" and add the path to your ffmpeg `bin` folder (e.g. `C:\ffmpeg\bin`).
+     - Click OK to save and close all dialogs.
+  4. Open a new Command Prompt or PowerShell and verify with:
+     ```sh
+     ffmpeg -version
+     ```
+  - If you get a "not recognized as an internal or external command" error, double-check your PATH.
 
-## Options
+- **Download `sldl.exe`:**
+  - Go to the [slsk-batchdl releases page](https://github.com/fiso64/slsk-batchdl/releases).
+  - Download the latest `sldl.exe` and place it in your project directory.
 
-- `-d, --directory`       Output directory (required)
-- `--min-duration`        Minimum video duration in seconds (default: 150)
-- `--max-duration`        Maximum video duration in seconds (default: 630)
-- `--workers`             Number of concurrent downloads (default: 4)
+---
 
-## Example Usage
+## Implementation Details
 
-To download MP3s from a YouTube comment containing a tracklist, run:
+### 1. `DJ2MP3_spotify_via_soulseek.py`
+- **Purpose:** Downloads tracks from a Spotify playlist using Soulseek.
+- **Requirements:** `spotipy`, `sldl`, .NET Runtime, Spotify API credentials.
+- **Setup:**
+  - Register a free app at the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications).
+  - Save your credentials in `spotify_credentials.txt`:
+    ```
+    CLIENT_ID=your_client_id_here
+    CLIENT_SECRET=your_client_secret_here
+    ```
+- **How it works:**
+  1. Fetches all tracks from the Spotify playlist.
+  2. Writes the tracklist to `<playlist_name>/tracklist.txt`.
+  3. Downloads all tracks into `<playlist_name>/` using Soulseek.
+- **Options:**
+  - `-d, --directory` (required)
+  - `--pref-format` (default: mp3,flac,wav)
+  - `--min-bitrate` (default: 256)
+  - `--min-size` (default: 500K)
+  - `--max-size` (default: 100M)
+- **Notes:**
+  - You do **not** need to set a Redirect URI for this script (Client Credentials flow is used).
+  - Your Spotify credentials are **never** committed to git (see `.gitignore`).
+  - The script requires the same Soulseek and .NET setup as the YouTube version.
 
-```sh
-python setlist_to_mp3.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4LZra3oRGeF0St4AaABAg" -d downloads
-```
+### 2. `DJ2MP3_youtube_via_soulseek.py`
+- **Purpose:** Downloads tracks from a YouTube comment tracklist using Soulseek.
+- **Requirements:** `youtube-comment-downloader`, `yt-dlp`, `sldl`, .NET Runtime.
+- **How it works:**
+  1. Extracts tracklist from a YouTube comment.
+  2. Writes the tracklist to `<mix_name>/tracklist.txt`.
+  3. Downloads all tracks into `<mix_name>/` using Soulseek.
+- **Options:**
+  - `-d, --directory` (required)
+  - `--pref-format` (default: mp3,flac,wav)
+  - `--min-bitrate` (default: 256)
+  - `--min-size` (default: 500K)
+  - `--max-size` (default: 100M)
 
-This will create a `downloads` directory in your project root and save the MP3s there.
-The script successfully downloaded 17 out of 21 songs listed in the comment.
+### 3. `DJ2MP3_youtube.py`
+- **Purpose:** Downloads MP3s directly from YouTube using a tracklist comment.
+- **Requirements:** `youtube-comment-downloader`, `yt-dlp`, `mutagen`, `tqdm`, `ffmpeg`.
+- **How it works:**
+  1. Extracts tracklist from a YouTube comment.
+  2. Downloads and converts each track to MP3.
+  3. Saves all tracks in the specified output directory.
+- **Options:**
+  - `-d, --directory` (required)
+  - `--min-duration` (default: 150)
+  - `--max-duration` (default: 630)
+  - `--workers` (default: 4)
+
+---
+
+## sldl (Soulseek Batch Downloader) Documentation
+
+- See the [slsk-batchdl releases page](https://github.com/fiso64/slsk-batchdl/releases) for the latest downloads and usage instructions.
+- On first run, you will be prompted for your Soulseek username and password (these are stored securely by `sldl`).
+- All tracks will be downloaded into the folder you specify with `-d` and the script will create a subfolder named after the playlist or mix.
+
+---
+
+## Troubleshooting
+- If you get an authentication error, double-check your `spotify_credentials.txt`.
+- If no tracks are found, make sure the playlist is public and the URL is correct.
+- For Soulseek download issues, see the `sldl` documentation and ensure your credentials are correct.
