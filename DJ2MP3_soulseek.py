@@ -136,13 +136,5 @@ def main():
     proc.wait()
     print("--- slsk-batchdl finished ---\n")
 
-    # Print summary table
-    print("\nDownload Summary:")
-    print(f"{'Track':60} | Status")
-    print("-"*75)
-    for track in tracks:
-        status = status_dict.get(track, {'status': 'Unknown'})['status']
-        print(f"{track:60} | {status}")
-
 if __name__ == '__main__':
     main()

@@ -60,3 +60,46 @@ python setlist_to_mp3.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4L
 
 This will create a `downloads` directory in your project root and save the MP3s there.
 The script successfully downloaded 17 out of 21 songs listed in the comment.
+
+---
+
+## Soulseek Batch Downloader Script (`DJ2MP3_soulseek.py`)
+
+This script automates downloading tracks from a YouTube comment tracklist using Soulseek via the `slsk-batchdl` tool (`sldl.exe`).
+
+### Requirements
+
+- Python packages: `youtube-comment-downloader`, `yt-dlp`
+- Soulseek batch downloader: [`sldl.exe`](https://github.com/0x7d/soulseek-dl/releases)
+- **.NET Runtime:** `sldl.exe` requires the [.NET 6.0 or later Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) (Windows, x64/x86)
+
+#### Install Python dependencies
+```sh
+pip install youtube-comment-downloader yt-dlp
+```
+
+#### Install .NET Desktop Runtime (Windows)
+1. Go to the [.NET 6.0 Desktop Runtime download page](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
+2. Download and install the "Desktop Runtime" for your system (x64/x86).
+3. After installation, you should be able to run `dotnet --version` in a new terminal.
+
+#### Download `sldl.exe`
+1. Go to the [slsk-batchdl releases page](https://github.com/0x7d/soulseek-dl/releases).
+2. Download the latest `sldl.exe` and place it in your project directory (same folder as the Python script).
+
+### Usage
+
+```sh
+python DJ2MP3_soulseek.py "<YouTube comment URL>" -d <output_directory>
+```
+
+- The script will create a subfolder named after the YouTube video title inside your chosen output directory.
+- On first run, you will be prompted for your Soulseek username and password (these are stored securely by `sldl.exe`).
+- All tracks will be downloaded into the video-named folder.
+
+#### Example
+```sh
+python DJ2MP3_soulseek.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4LZra3oRGeF0St4AaABAg" -d soulseek_downloads
+```
+
+---
