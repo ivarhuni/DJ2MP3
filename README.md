@@ -32,14 +32,25 @@ pip install youtube-comment-downloader yt-dlp
       ```
     - Or download the installer from the [.NET 6.0 Desktop Runtime download page](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
     - After installation, you should be able to run `dotnet --version` in a new terminal.
-2. **Download and run `sldl`:**
+2. **Download and install `sldl`:**
     - Go to the [slsk-batchdl releases page](https://github.com/fiso64/slsk-batchdl/releases).
-    - Download the latest `sldl` binary for macOS (or the generic .NET version if not available, and run with `dotnet sldl.dll`).
-    - Make it executable if needed:
+    - Download the latest release for macOS. If a native `sldl` binary is available (e.g. `sldl-macos-x64` or `sldl-macos-arm64`), download it and make it executable:
       ```sh
-      chmod +x sldl
+      chmod +x sldl-macos-*
+      mv sldl-macos-* sldl
       ```
-    - Place it in your project directory (same folder as the Python script).
+    - If only a `.zip` or `.tar.gz` is provided, extract it and move the `sldl` binary to your project directory.
+    - If there is no native macOS binary, download the `sldl.dll` file and run it using the .NET runtime:
+      ```sh
+      dotnet sldl.dll <args>
+      ```
+    - Place the `sldl` binary (or `sldl.dll`) in your project directory (same folder as the Python script).
+    - You can test the installation by running:
+      ```sh
+      ./sldl --help
+      # or, if using the DLL:
+      dotnet sldl.dll --help
+      ```
 
 ### Usage
 
