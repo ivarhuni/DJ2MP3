@@ -108,6 +108,7 @@ python DJ2MP3_youtube.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4L
     CLIENT_ID=your_client_id_here
     CLIENT_SECRET=your_client_secret_here
     ```
+- **Note:** The Spotify playlist must be **public** for this script to work. Private playlists are not supported with the current authentication method.
 - **How it works:**
   1. Fetches all tracks from the Spotify playlist.
   2. Writes the tracklist to `<playlist_name>/tracklist.txt`.
