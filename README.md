@@ -59,3 +59,4 @@ python setlist_to_mp3.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4L
 ```
 
 This will create a `downloads` directory in your project root and save the MP3s there.
+The script successfully downloaded 17 out of 21 songs listed in the comment.
