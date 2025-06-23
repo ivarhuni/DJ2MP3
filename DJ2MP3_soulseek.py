@@ -56,7 +56,7 @@ def main():
     parser = argparse.ArgumentParser(description="Download tracks from Soulseek using slsk-batchdl based on a YouTube comment tracklist.")
     parser.add_argument('comment_url', help="YouTube comment URL (with v and lc parameters)")
     parser.add_argument('-d', '--directory', required=True, help='Output directory for downloads')
-    parser.add_argument('--pref-format', type=str, default='flac,mp3,wav', help='Preferred formats, comma-separated (default: flac,mp3,wav)')
+    parser.add_argument('--pref-format', type=str, default='mp3,flac,wav', help='Preferred formats, comma-separated (default: mp3,flac,wav)')
     parser.add_argument('--min-bitrate', type=int, default=256, help='Minimum bitrate (default: 256)')
     parser.add_argument('--min-size', type=str, default='500K', help='Minimum file size (default: 500K)')
     parser.add_argument('--max-size', type=str, default='100M', help='Maximum file size (default: 100M)')

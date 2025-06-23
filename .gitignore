@@ -55,4 +55,6 @@
 *.nfo
 *.m3u8
 download_log.txt
-soulseek_downloads/ 
+soulseek_downloads/
+sldl.exe
+sldl.pdb 
