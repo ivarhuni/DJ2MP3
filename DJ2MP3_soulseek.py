@@ -6,6 +6,7 @@ import datetime
 from urllib.parse import urlparse, parse_qs
 import subprocess
 from youtube_comment_downloader import YoutubeCommentDownloader, SORT_BY_POPULAR
+import yt_dlp
 
 # --- Tracklist Sanitization ---
 def sanitize_tracklist(lines):
@@ -45,6 +46,10 @@ def sanitize_tracklist(lines):
         cleaned.append(f"{artist} {title}")
     return cleaned
 
+def sanitize_filename(name):
+    # Remove or replace characters not allowed in Windows folder names
+    return re.sub(r'[\\/:*?"<>|]', '_', name)
+
 # Note: Login is now handled by slsk-batchdl (sldl.exe) itself. On first run, it will prompt for Soulseek credentials and store them securely for future use.
 
 def main():
@@ -82,9 +87,15 @@ def main():
     if not tracks:
         sys.exit("No valid 'Artist Title' entries found.")
 
-    # Prepare output and log
-    os.makedirs(args.directory, exist_ok=True)
-    tracklist_path = os.path.join(args.directory, 'tracklist.txt')
+    # Fetch YouTube video title for folder naming
+    ydl_opts = {'quiet': True, 'skip_download': True}
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(f"https://www.youtube.com/watch?v={vid}", download=False)
+        video_title = info.get('title', f'video_{vid}')
+    folder_name = sanitize_filename(video_title)
+    output_dir = os.path.join(args.directory, folder_name)
+    os.makedirs(output_dir, exist_ok=True)
+    tracklist_path = os.path.join(output_dir, 'tracklist.txt')
     with open(tracklist_path, 'w', encoding='utf-8') as f:
         for track in tracks:
             f.write(f'"{track}"\n')
@@ -99,7 +110,7 @@ def main():
         '--pref-format', args.pref_format,
         '--min-bitrate', str(args.min_bitrate),
         '--input-type', 'list',
-        '-p', args.directory
+        '-p', output_dir
     ]
     print(f"Running: {' '.join(cmd)}")
 
