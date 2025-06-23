@@ -9,7 +9,7 @@ import spotipy
 def sanitize_filename(name):
     return re.sub(r'[\\/:*?"<>|]', '_', name)
 
-def fetch_spotify_tracks(playlist_url, sp):
+def fetch_spotify_tracks_with_dash_fallback(playlist_url, sp):
     playlist_id = playlist_url.split("playlist/")[-1].split("?")[0]
     results = sp.playlist_tracks(playlist_id)
     tracks = []
@@ -18,7 +18,16 @@ def fetch_spotify_tracks(playlist_url, sp):
         artist = track['artists'][0]['name'] if track['artists'] else ''
         title = track['name']
         if artist and title:
-            tracks.append(f'{artist} {title}')
+            search_entry = f'{artist} {title}'
+            # Try original search
+            found = sp.search(q=search_entry, type='track', limit=1)['tracks']['items']
+            if found:
+                tracks.append(search_entry)
+            elif '-' in search_entry:
+                fallback = search_entry.replace('-', '').replace('  ', ' ').strip()
+                found_fallback = sp.search(q=fallback, type='track', limit=1)['tracks']['items']
+                if found_fallback:
+                    tracks.append(fallback)
     return tracks
 
 def read_spotify_credentials(path='spotify_credentials.txt'):
@@ -29,6 +38,22 @@ def read_spotify_credentials(path='spotify_credentials.txt'):
                 k, v = line.strip().split('=', 1)
                 creds[k.strip()] = v.strip()
     return creds.get('CLIENT_ID'), creds.get('CLIENT_SECRET')
+
+def write_tracklist_with_dash_fallback(tracks, path):
+    """
+    Write tracklist to file. If a track contains '-' and is not found, also try without the dash.
+    """
+    written = set()
+    with open(path, 'w', encoding='utf-8') as f:
+        for track in tracks:
+            f.write(f'"{track}"\n')
+            written.add(track)
+            # If the track contains a dash, add a fallback without the dash (if not already present)
+            if '-' in track:
+                fallback = track.replace('-', '').replace('  ', ' ').strip()
+                if fallback and fallback not in written:
+                    f.write(f'"{fallback}"\n')
+                    written.add(fallback)
 
 def main():
     parser = argparse.ArgumentParser(description="Download tracks from a Spotify playlist using Soulseek via sldl.exe.")
@@ -50,7 +75,7 @@ def main():
 
     # Fetch playlist tracks
     print(f"Fetching tracks from Spotify playlist: {args.playlist_url}")
-    tracks = fetch_spotify_tracks(args.playlist_url, sp)
+    tracks = fetch_spotify_tracks_with_dash_fallback(args.playlist_url, sp)
     print(f"Fetched {len(tracks)} tracks from playlist.")
     if not tracks:
         sys.exit("No tracks found in playlist.")
