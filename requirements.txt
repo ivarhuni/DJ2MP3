@@ -1,0 +1,5 @@
+spotipy
+youtube-comment-downloader
+yt-dlp
+mutagen
+tqdm 

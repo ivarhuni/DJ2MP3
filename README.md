@@ -1,5 +1,16 @@
 # DJ2MP3: Automated Tracklist Downloaders (Soulseek & YouTube)
 
+## Table of Contents
+- [Quick Start](#quick-start)
+- [Run Examples](#run-examples)
+- [Options Table](#options-table)
+- [Installation Instructions](#installation-instructions)
+- [Implementation Details](#implementation-details)
+- [sldl (Soulseek Batch Downloader) Documentation](#sldl-soulseek-batch-downloader-documentation)
+- [Troubleshooting](#troubleshooting)
+- [Credentials](#soulseek-credentials)
+- [Output Examples](#output-examples)
+
 ## Run Examples
 
 ### 1. Download from a Spotify Playlist via Soulseek
@@ -16,6 +27,18 @@ python DJ2MP3_youtube_via_soulseek.py "https://www.youtube.com/watch?v=E-6LmxvUi
 ```sh
 python DJ2MP3_youtube.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4LZra3oRGeF0St4AaABAg" -d downloads
 ```
+
+## Quick Start
+
+1. Clone this repository and open a terminal in the project directory.
+2. Install Python dependencies:
+   ```sh
+   pip install -r requirements.txt
+   ```
+3. Install ffmpeg and the .NET runtime (see below for OS-specific instructions).
+4. Download and place the `sldl` binary in your project directory (see below).
+5. Add your credentials to `spotify_credentials.txt` and `soulseek_credentials.txt` in the project directory (see below for format).
+6. Run one of the example commands below!
 
 ---
 
@@ -168,15 +191,46 @@ python DJ2MP3_youtube.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4L
 - If no tracks are found, make sure the playlist is public and the URL is correct.
 - For Soulseek download issues, see the `sldl` documentation and ensure your credentials are correct.
 
-### Soulseek Credentials
+### Credentials
 
-You must supply your Soulseek username and password in a file named `soulseek_credentials.txt` in the project directory. This file should contain:
+Both credential files must be placed in the **project root directory**:
 
-```
-SOULSEEK_USER=your_soulseek_username
-SOULSEEK_PASS=your_soulseek_password
-```
+- **spotify_credentials.txt**
+  ```
+  CLIENT_ID=your_client_id_here
+  CLIENT_SECRET=your_client_secret_here
+  ```
+- **soulseek_credentials.txt**
+  ```
+  SOULSEEK_USER=your_soulseek_username
+  SOULSEEK_PASS=your_soulseek_password
+  ```
 
 This file is automatically gitignored and will not be committed to your repository.
 
 Both Soulseek scripts (`DJ2MP3_spotify_via_soulseek.py` and `DJ2MP3_youtube_via_soulseek.py`) will read your credentials from this file.
+
+## Output Examples
+
+### Directory Structure
+After running a script, your output directory might look like this:
+
+```
+soulseek_downloads/
+└── My DJ Mix Title/
+    ├── tracklist.txt
+    ├── Artist1 Track1.mp3
+    ├── Artist2 Track2.flac
+    └── ...
+```
+
+### Sample Log Output
+```
+[INFO] Parsed 12 tracks from YouTube comment.
+[INFO] Downloading with sldl...
+[OK] 1/12: "Artist1 Track1" downloaded successfully.
+[OK] 2/12: "Artist2 Track2" downloaded successfully.
+[WARN] 3/12: "Artist3 Track3" not found on Soulseek.
+...
+[INFO] All downloads complete. See 'tracklist.txt' for details.
+```
