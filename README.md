@@ -23,8 +23,8 @@ python DJ2MP3_youtube.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4L
 
 | Script                        | Output Dir Option | Format Option         | Bitrate Option | Min/Max Size Option | Duration Option | Workers Option | Notes |
 |-------------------------------|-------------------|----------------------|---------------|---------------------|-----------------|---------------|-------|
-| DJ2MP3_spotify_via_soulseek   | `-d, --directory` | `--pref-format`      | `--min-bitrate`| `--min-size`, `--max-size` | -               | -             | Needs Spotify credentials |
-| DJ2MP3_youtube_via_soulseek   | `-d, --directory` | `--pref-format`      | `--min-bitrate`| `--min-size`, `--max-size` | -               | -             | -     |
+| DJ2MP3_spotify_via_soulseek   | `-d, --directory` | `--pref-format`      | `--min-bitrate`| `--min-size`, `--max-size` | -               | -             | Needs Spotify credentials and Soulseek credentials |
+| DJ2MP3_youtube_via_soulseek   | `-d, --directory` | `--pref-format`      | `--min-bitrate`| `--min-size`, `--max-size` | -               | -             | Needs Soulseek credentials |
 | DJ2MP3_youtube                | `-d, --directory` | -                    | -             | -                   | `--min-duration`, `--max-duration` | `--workers`    | Needs ffmpeg |
 
 ---
