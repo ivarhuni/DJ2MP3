@@ -153,5 +153,25 @@ def main():
     flatten_directory(playlist_root)
     print(f"Flattened directory: {playlist_root}")
 
+    # Check for not found tracks and write to not_found.txt
+    downloaded_files = [f for f in os.listdir(playlist_root) if os.path.isfile(os.path.join(playlist_root, f))]
+    downloaded_basenames = set(os.path.splitext(f)[0].lower() for f in downloaded_files)
+    not_found = []
+    for track in tracks:
+        # Remove quotes and sanitize to match file naming
+        base = sanitize_filename(track).lower()
+        if base not in downloaded_basenames:
+            not_found.append(track)
+    not_found_path = os.path.join(playlist_root, 'not_found.txt')
+    with open(not_found_path, 'w', encoding='utf-8') as nf:
+        for track in not_found:
+            nf.write(track + '\n')
+    if not_found:
+        print(f"\nTracks not found (also written to {not_found_path}):")
+        for track in not_found:
+            print(f"  - {track}")
+    else:
+        print("\nAll tracks were found and downloaded.")
+
 if __name__ == '__main__':
     main() 
