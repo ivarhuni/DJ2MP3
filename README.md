@@ -62,6 +62,8 @@ python DJ2MP3_youtube.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4L
     chmod +x sldl-macos-*
     mv sldl-macos-* sldl
     ```
+  - **Move the `sldl` binary into your project directory (the same folder as your Python scripts).**
+    This ensures the script can find and run `sldl` without needing to specify a path.
 
 ### Windows
 
