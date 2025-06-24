@@ -64,7 +64,7 @@ python DJ2MP3_youtube.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4L
 
 - **Install Python dependencies:**
   ```sh
-  pip install spotipy youtube-comment-downloader yt-dlp mutagen tqdm
+  pip install -r requirements.txt
   ```
 
 - **Install ffmpeg:**
@@ -96,7 +96,7 @@ python DJ2MP3_youtube.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4L
 
 - **Install Python dependencies:**
   ```sh
-  pip install spotipy youtube-comment-downloader yt-dlp mutagen tqdm
+  pip install -r requirements.txt
   ```
 
 - **Install ffmpeg:**
