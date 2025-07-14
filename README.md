@@ -28,6 +28,16 @@ python DJ2MP3_youtube_via_soulseek.py "https://www.youtube.com/watch?v=E-6LmxvUi
 python DJ2MP3_youtube.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4LZra3oRGeF0St4AaABAg" -d downloads
 ```
 
+### 4. Download from a 1001tracklists URL via Soulseek
+```sh
+python DJ2MP3_1001tracklists_via_soulseek.py "https://www.1001tracklists.com/tracklist/1z2ynyjk/a.paul-chris-liberator-naked-lunch-podcast-093-2014-03-28.html" -d soulseek_downloads
+```
+
+### 5. Download from a text file tracklist via Soulseek
+```sh
+python DJ2MP3_tracklist_via_soulseek.py my_tracks.txt -d soulseek_downloads
+```
+
 ## Quick Start
 
 1. Clone this repository and open a terminal in the project directory.
@@ -49,6 +59,8 @@ python DJ2MP3_youtube.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4L
 | DJ2MP3_spotify_via_soulseek   | `-d, --directory` | `--pref-format`      | `--min-bitrate`| `--min-size`, `--max-size` | -               | -             | Needs Spotify credentials and Soulseek credentials |
 | DJ2MP3_youtube_via_soulseek   | `-d, --directory` | `--pref-format`      | `--min-bitrate`| `--min-size`, `--max-size` | -               | -             | Needs Soulseek credentials |
 | DJ2MP3_youtube                | `-d, --directory` | -                    | -             | -                   | `--min-duration`, `--max-duration` | `--workers`    | Needs ffmpeg |
+| DJ2MP3_1001tracklists_via_soulseek | `-d, --directory` | `--pref-format`      | `--min-bitrate`| `--min-size`, `--max-size` | -               | -             | Needs Soulseek credentials, scrapes 1001tracklists |
+| DJ2MP3_tracklist_via_soulseek | `-d, --directory` | `--pref-format`      | `--min-bitrate`| `--min-size`, `--max-size` | -               | -             | Needs Soulseek credentials, reads text files |
 
 ---
 
@@ -175,6 +187,30 @@ python DJ2MP3_youtube.py "https://www.youtube.com/watch?v=E-6LmxvUiMk&lc=UgxwA4L
   - `--min-duration` (default: 150)
   - `--max-duration` (default: 630)
   - `--workers` (default: 4)
+
+---
+
+## Text File Format (for DJ2MP3_tracklist_via_soulseek.py)
+
+When using the tracklist script, your text file should contain one track per line in the format:
+```
+Artist Trackname
+Artist Trackname
+...
+```
+
+**Example tracklist.txt:**
+```
+Chris Liberator Spectrum 97 Edit
+DDR & The Geezer Mad Cows on Acid
+Lochi Acid Riot
+Geezer Prozac
+```
+
+- **No special formatting required** - just artist name, space, track title
+- Empty lines are ignored
+- The script will automatically create search variations (with/without dashes) for better results
+- The output folder will be named after your text file (without the .txt extension)
 
 ---
 
