@@ -2,4 +2,6 @@ spotipy
 youtube-comment-downloader
 yt-dlp
 mutagen
-tqdm 
+tqdm
+requests
+beautifulsoup4 
